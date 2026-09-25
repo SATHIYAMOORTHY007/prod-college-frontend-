@@ -5,16 +5,12 @@
 [build.environment]
   NODE_VERSION = "22"
 
-# 1) API calls are proxied to the backend, so the browser sees one site and
-#    the httpOnly refresh cookie stays first-party (works in Safari/incognito).
-#    Replace the URL with your Render backend URL.
 [[redirects]]
   from = "/api/*"
   to = "https://prod-college-backend.onrender.com/api/:splat"
   status = 200
   force = true
 
-# 2) Single-page app: every other path serves index.html (so refreshing /results works).
 [[redirects]]
   from = "/*"
   to = "/index.html"
