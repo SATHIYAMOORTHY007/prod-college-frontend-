@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react'
-import { Navigate, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { ROLES } from '../constants/roles'
 import { ROUTES } from '../constants/routes'
 import AuthLayout from '../layouts/AuthLayout'
@@ -10,6 +10,7 @@ import RoleRoute from './RoleRoute'
 import GuestRoute from './GuestRoute'
 
 // Each page is its own chunk, so users only download the screens their role can open.
+const HomePage = lazy(() => import('../features/home/HomePage'))
 const LoginPage = lazy(() => import('../features/auth/LoginPage'))
 const ForgotPasswordPage = lazy(() => import('../features/auth/ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('../features/auth/ResetPasswordPage'))
@@ -41,6 +42,9 @@ function AppRoutes() {
   return (
     <Suspense fallback={<LoadingState label="Loading…" />}>
       <Routes>
+        {/* Public marketing page. Renders for everyone; its CTAs adapt to the session. */}
+        <Route path={ROUTES.HOME} element={<HomePage />} />
+
         <Route element={<GuestRoute />}>
           <Route element={<AuthLayout />}>
             <Route path={ROUTES.LOGIN} element={<LoginPage />} />
@@ -54,7 +58,6 @@ function AppRoutes() {
 
         <Route element={<ProtectedRoute />}>
           <Route element={<PortalLayout />}>
-            <Route index element={<Navigate to={ROUTES.DASHBOARD} replace />} />
             <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
             <Route path={ROUTES.NOTIFICATIONS} element={<NotificationsPage />} />
             <Route path={ROUTES.EXAMS} element={<ExamsPage />} />
